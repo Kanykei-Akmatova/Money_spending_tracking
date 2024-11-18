@@ -1,0 +1,91 @@
+import tkinter as tk
+from tkinter import messagebox
+import csv
+from datetime import datetime
+
+
+# Main application class
+class MoneySpendingTrackerApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Money Spending Tracker")
+
+        self.expenses = []
+
+        self.setup_ui()
+
+    def setup_ui(self):
+        tk.Label(self.root, text="Category:").grid(row=0, column=0, padx=5, pady=5)
+        self.category_entry = tk.Entry(self.root)
+        self.category_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        tk.Label(self.root, text="Amount:").grid(row=1, column=0, padx=5, pady=5)
+        self.amount_entry = tk.Entry(self.root)
+        self.amount_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        tk.Label(self.root, text="Date (YYYY-MM-DD):").grid(row=2, column=0, padx=5, pady=5)
+        self.date_entry = tk.Entry(self.root)
+        self.date_entry.grid(row=2, column=1, padx=5, pady=5)
+
+        # Buttons for Add, Total, Save, Delete, Edit
+        tk.Button(self.root, text="Add", command=self.add_expense).grid(row=3, column=0, padx=5, pady=5)
+        tk.Button(self.root, text="Total", command=self.show_total).grid(row=3, column=1, padx=5, pady=5)
+        tk.Button(self.root, text="Save", command=self.save_to_csv).grid(row=4, column=0, padx=5, pady=5)
+        tk.Button(self.root, text="Delete", command=self.delete_last_expense).grid(row=4, column=1, padx=5, pady=5)
+        tk.Button(self.root, text="Edit", command=self.edit_expense).grid(row=4, column=2, padx=5, pady=5)
+
+    def add_expense(self):
+        category = self.category_entry.get()
+        amount = self.amount_entry.get()
+        date = self.date_entry.get()
+
+        try:
+            amount = float(amount)
+            if amount <= 0:
+                raise ValueError("Amount must be positive.")
+
+            datetime.strptime(date, "%Y-%m-%d")  # Check date format
+            if not category:
+                raise ValueError("Category cannot be empty.")
+
+            expense = {"Category": category, "Amount": amount, "Date": date}
+            self.expenses.append(expense)
+            messagebox.showinfo("Success", "Expense added successfully!")
+
+            self.category_entry.delete(0, tk.END)
+            self.amount_entry.delete(0, tk.END)
+            self.date_entry.delete(0, tk.END)
+        except ValueError as e:
+            messagebox.showerror("Error","Invalid input:",e)
+
+    def show_total(self):
+        if not self.expenses:
+            messagebox.showinfo("Total Spending", "No expenses recorded yet.")
+            return
+
+        total_amount = sum(expense["Amount"] for expense in self.expenses)
+        messagebox.showinfo("Total Spending", "Total Amount Spent: ${total_amount:.2f}")
+
+    def save_to_csv(self):
+        if messagebox.askyesno("Confirm Save", "This will overwrite the existing file. Continue?"):
+            with open("expenses.csv", "w", newline="") as file:
+                writer = csv.DictWriter(file, fieldnames=["Category", "Amount", "Date"])
+                writer.writeheader()
+                writer.writerows(self.expenses)
+            messagebox.showinfo("Success", "Expenses saved to expenses.csv")
+
+    def delete_last_expense(self):t
+        if self.expenses:
+            self.expenses.pop()
+            messagebox.showinfo("Delete", "Last expense deleted.")
+        else:
+            messagebox.showwarning("Warning", "No expenses to delete.")
+
+    def edit_expense(self):
+        messagebox.showinfo("Info", "Edit functionality is not implemented yet.")
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = MoneySpendingTrackerApp(root)
+    root.mainloop()
