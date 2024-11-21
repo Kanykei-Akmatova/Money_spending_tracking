@@ -114,12 +114,12 @@ class MoneySpendingTrackerApp:
     def show_budget_table(self):
         # Data for the budget
         budget_data = [
-            ("Rent", 800, 1200),
+            ("Rent", 900, 2200),
             ("Transport", 50, 200),
             ("Food", 300, 500),
             ("Activities", 100, 300),
             ("Miscellaneous", 50, 150),
-            ("Total", 1300, 2350),
+            ("Total", 1400, 3350),
         ]
 
         # Create a new window to show the budget table
@@ -149,7 +149,6 @@ class MoneySpendingTrackerApp:
         scrollbar = ttk.Scrollbar(table_window, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=scrollbar.set)
         scrollbar.pack(side="right", fill="y")
-        # (Code for show_budget_table as in the previous example)
         pass
 
     def show_pie_chart(self):
