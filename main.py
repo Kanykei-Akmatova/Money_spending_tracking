@@ -1,11 +1,16 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+from tkcalendar import DateEntry
 import csv
 from datetime import datetime
 import matplotlib.pyplot as plt
 
+
 class MoneySpendingTrackerApp:
     def __init__(self, root):
+        self.category_entry = None
+        self.date_entry = None
+        self.amount_entry = None
         self.root = root
         self.root.title("Money Spending Tracker")
 
@@ -25,17 +30,28 @@ class MoneySpendingTrackerApp:
         self.amount_entry = tk.Entry(self.root)
         self.amount_entry.grid(row=1, column=1, padx=5, pady=5)
 
-        tk.Label(self.root, text="Date (YYYY-MM-DD):").grid(row=2, column=0, padx=5, pady=5)
-        self.date_entry = tk.Entry(self.root)
+        tk.Label(self.root, text="Date:").grid(row=2, column=0, padx=5, pady=5)
+        self.date_entry = DateEntry(self.root, date_pattern="yyyy-MM-dd")
         self.date_entry.grid(row=2, column=1, padx=5, pady=5)
 
         # Buttons for Add, Total, Save, Delete, Budget Table, and Pie Chart
-        tk.Button(self.root, text="Add", command=self.add_expense, bg="#4CAF50", fg="white").grid(row=3, column=0, padx=5, pady=5)
-        tk.Button(self.root, text="Total", command=self.show_total, bg="#008CBA", fg="white").grid(row=3, column=1, padx=5, pady=5)
-        tk.Button(self.root, text="Save", command=self.save_to_csv, bg="#FFC107", fg="black").grid(row=4, column=0, padx=5, pady=5)
-        tk.Button(self.root, text="Delete", command=self.delete_last_expense, bg="#F44336", fg="white").grid(row=4, column=1, padx=5, pady=5)
-        tk.Button(self.root, text="Show Budget", command=self.show_budget_table, bg="#9C27B0", fg="white").grid(row=5, column=0, columnspan=2, pady=10)
-        tk.Button(self.root, text="Show Pie Chart", command=self.show_pie_chart, bg="#FF5722", fg="white").grid(row=6, column=0, columnspan=2, pady=10)
+        tk.Button(self.root, text="Add", command=self.add_expense, bg="#4CAF50", fg="white")\
+            .grid(row=3, column=0, padx=5, pady=5)
+
+        tk.Button(self.root, text="Total", command=self.show_total, bg="#008CBA", fg="white")\
+            .grid(row=3, column=1, padx=5, pady=5)
+
+        tk.Button(self.root, text="Save", command=self.save_to_csv, bg="#FFC107", fg="black")\
+            .grid(row=4, column=0, padx=5, pady=5)
+
+        tk.Button(self.root, text="Delete", command=self.delete_last_expense, bg="#F44336", fg="white")\
+            .grid(row=4, column=1, padx=5,  pady=5)
+
+        tk.Button(self.root, text="Show Budget", command=self.show_budget_table, bg="#9C27B0", fg="white")\
+            .grid(row=5, column=0, columnspan=2, pady=10)
+
+        tk.Button(self.root, text="Show Pie Chart", command=self.show_pie_chart, bg="#FF5722", fg="white")\
+            .grid(row=6, column=0, columnspan=2, pady=10)
 
     def add_expense(self):
         # Fetch data from entries and validate
@@ -157,6 +173,7 @@ class MoneySpendingTrackerApp:
 
         # Display the pie chart
         plt.show()
+
 
 # Running the application
 root = tk.Tk()
